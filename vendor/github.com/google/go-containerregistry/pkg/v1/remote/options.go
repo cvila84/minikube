@@ -15,7 +15,6 @@
 package remote
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/google/go-containerregistry/pkg/authn"
