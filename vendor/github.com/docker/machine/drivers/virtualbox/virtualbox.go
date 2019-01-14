@@ -882,7 +882,7 @@ func getDHCPAddressRange(dhcpAddr net.IP, network *net.IPNet) (lowerIP net.IP, u
 		// For a /24 subnet, use the original behavior of allowing the address range
 		// between x.x.x.100 and x.x.x.254.
 		lowerIP = net.IPv4(nAddr[0], nAddr[1], nAddr[2], byte(100))
-		upperIP = net.IPv4(nAddr[0], nAddr[1], nAddr[2], byte(100))
+		upperIP = net.IPv4(nAddr[0], nAddr[1], nAddr[2], byte(254))
 		return
 	}
 

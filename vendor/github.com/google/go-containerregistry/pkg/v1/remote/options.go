@@ -48,7 +48,7 @@ func WithAuthFromKeychain(keys authn.Keychain) ImageOption {
 			return err
 		}
 		if auth == authn.Anonymous {
-			log.Println("No matching credentials were found, falling back on anonymous")
+			//			log.Println("No matching credentials were found, falling back on anonymous")
 		}
 		i.auth = auth
 		return nil
