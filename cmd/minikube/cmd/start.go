@@ -1010,8 +1010,17 @@ func validateNetwork(h *host.Host, r command.Runner) string {
 
 	if !driver.BareMetal(h.Driver.DriverName()) {
 		sshAddr := fmt.Sprintf("%s:22", ip)
-		conn, err := net.Dial("tcp", sshAddr)
-		if err != nil {
+		dial := func() (err error) {
+			d := net.Dialer{Timeout: 3 * time.Second}
+			conn, err := d.Dial("tcp", sshAddr)
+			if err != nil {
+				return err
+			}
+			_ = conn.Close()
+			return nil
+		}
+
+		if err := retry.Expo(dial, time.Second, 13*time.Second); err != nil {
 			exit.WithCodeT(exit.IO, `minikube is unable to connect to the VM: {{.error}}
 
 This is likely due to one of two reasons:
@@ -1026,7 +1035,6 @@ Suggested workarounds:
 - Restart or reinstall {{.hypervisor}}
 - Use an alternative --vm-driver`, out.V{"error": err, "hypervisor": h.Driver.DriverName(), "ip": ip})
 		}
-		defer conn.Close()
 	}
 
 	// DNS check
